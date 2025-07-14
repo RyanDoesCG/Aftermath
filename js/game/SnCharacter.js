@@ -168,8 +168,6 @@ class SnCharacter extends SceneObject
                 const view = new View(this.transform.position, this.transform.rotation)
                 physics.linearForce(multiplys(view.forward, 0.0001));
                 physics.angularForce(vec3(0.0, Math.cos(engine.input.time * 0.001) * 0.00005, 0.0))
-
-                log (Math.sin(engine.input.time * 0.001) * 0.00005)
             }
         }
     }
