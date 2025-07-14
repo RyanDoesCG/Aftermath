@@ -1,0 +1,106 @@
+<!DOCTYPE HTML>
+<html lang="en-uk">
+    <head>
+        <title>Render Engine</title>
+        <meta charset="utf-8">
+        <meta name="author"    content="Ryan Needham"/>
+        <meta name="viewport"  content="width=device-width">
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body oncontextmenu="return false;">
+        <div id="splash">
+            <h1 id="splashText">A&nbsp;&nbsp;F&nbsp;&nbsp;T&nbsp;&nbsp;E&nbsp;&nbsp;R&nbsp;&nbsp;M&nbsp;&nbsp;A&nbsp;&nbsp;T&nbsp;&nbsp;H</h1>
+            </br>
+            <p id="loading">&#x2022;</p>
+        </div>
+
+        <div class="editor" id="sidebarResize"></div>
+        <div class="editor" id="sidebar">
+            <div id="outliner"></div>
+            <!--<div class="editor"id="resize"></div>-->
+            <div id="inspector"></div>
+            <!--<div class="editor"id="resize"></div>-->
+            <div id="controls"></div>
+        </div>
+
+        <canvas width="16" height="16" id="viewport"></canvas>
+
+        <div class="editor" id="bottombar">
+            <div id="console"></div>
+        </div>
+        <div id="ui"></div>
+        <!-- Engine Layer -->
+        <script src="js/engine/editor/console.js"></script>
+        <script src="js/engine/editor/editor.js"></script>
+        <script src="js/engine/editor/objectinspector.js"></script>
+        <script src="js/engine/editor/rendersettings.js"></script>
+        <script src="js/engine/editor/sceneoutliner.js"></script>
+        <script src="js/engine/editor/stats.js"></script>
+        <script src="js/engine/core/maths.js"></script>
+        <script src="js/engine/core/noise.js"></script>
+        <script src="js/engine/core/mesh.js"></script>
+        <script src="js/engine/core/view.js"></script>
+        <script src="js/engine/core/voxel.js"></script>
+        <script src="js/engine/core/scene.js"></script>
+        <script src="js/engine/core/transform.js"></script>
+        <script src="js/engine/core/component.js"></script>
+        <script src="js/engine/core/events.js"></script>
+        <script src="js/engine/core/cookie.js"></script>
+        <script src="js/engine/input/inputengine.js"></script>
+        <script src="js/engine/rendering/core/geometry.js"></script>
+        <script src="js/engine/rendering/core/texture.js"></script>
+        <script src="js/engine/rendering/core/rendercomponent.js"></script>
+        <script src="js/engine/rendering/core/framebuffer.js"></script>
+        <script src="js/engine/rendering/core/uniform.js"></script>
+        <script src="js/engine/rendering/core/shaders.js"></script>
+        <script src="js/engine/rendering/core/renderpass.js"></script>
+        <script src="js/engine/rendering/core/material.js"></script>
+        <script src="js/engine/rendering/core/lights.js"></script>
+        <script src="js/engine/rendering/core/camera.js"></script>
+        <script src="js/engine/rendering/core/postprocessobject.js"></script>
+        <script src="js/engine/rendering/transparencypass.js"></script>
+        <script src="js/engine/rendering/basepass.js"></script>
+        <script src="js/engine/rendering/taapass.js"></script>
+        <script src="js/engine/rendering/blurpass.js"></script>
+        <script src="js/engine/rendering/depthawareblurpass.js"></script>
+        <script src="js/engine/rendering/maskblurpass.js"></script>
+        <script src="js/engine/rendering/outtlinepass.js"></script>
+        <script src="js/engine/rendering/dofpass.js"></script>
+        <script src="js/engine/rendering/spotlightpass.js"></script>
+        <script src="js/engine/rendering/spotlightvolumetricpass.js"></script>
+        <script src="js/engine/rendering/directionallightpass.js"></script>
+        <script src="js/engine/rendering/pointlightpass.js"></script>
+        <script src="js/engine/rendering/shadowpass.js"></script>
+        <script src="js/engine/rendering/tonemappingpass.js"></script>
+        <script src="js/engine/rendering/volumetricspass.js"></script>
+        <script src="js/engine/rendering/compositepass.js"></script>
+        <script src="js/engine/rendering/postpass.js"></script>
+        <script src="js/engine/rendering/renderingengine.js"></script>
+        <script src="js/engine/rendering/visualize.js"></script>
+        <script src="js/engine/rendering/editorpass.js"></script>
+        <script src="js/engine/audio/audioengine.js"></script>
+        <script src="js/engine/physics/collision.js"></script>
+        <script src="js/engine/physics/physicscomponent.js"></script>
+        <script src="js/engine/physics/physicsengine.js"></script>
+        <script src="js/engine/objects/Sky.js"></script>
+        <script src="js/engine/objects/Grass.js"></script>
+        <script src="js/engine/objects/Cube.js"></script>
+        <!-- Game Layer -->
+        <script src="js/game/SnDirectionalLight.js"></script>
+        <script src="js/game/SnGameManager.js"></script>
+        <script src="js/game/SnSearchLight.js"></script>
+        <script src="js/game/SnBarrel.js"></script>
+        <script src="js/game/SnGround.js"></script>
+        <script src="js/game/SnFence.js"></script>
+        <script src="js/game/SnTree.js"></script>
+        <script src="js/game/SnBarrier.js"></script>
+        <script src="js/game/SnSearchLightBullet.js"></script>
+        <script src="js/game/SnFireflies.js"></script>
+        <script src="js/game/SnCharacterSmoke.js"></script>
+        <script src="js/game/SnCharacter.js"></script>
+        <script src="js/game/SnPlayer.js"></script>
+        <script src="js/game/SnGym.js"></script>
+        <script src="js/main.js"></script>
+    </body>
+</html>
+

@@ -1,0 +1,335 @@
+* 
+{
+    padding: 0;
+    margin:  0;
+	font-family: Arial, Helvetica, sans-serif;
+    cursor:default;
+}
+
+img {
+    display: inline-block;
+    height:1.5em;
+    padding:8px;
+    vertical-align: middle;
+}
+
+h2 {
+    font-size: 0.8em;
+    line-height: 30px;
+    color: #FFFFFF;
+    display: inline-block;
+    vertical-align: middle;
+    padding-left: 1em;
+}
+
+body::-webkit-scrollbar-track {
+    background: rgb(50, 50, 50);;        /* color of the tracking area */
+  }
+
+.editor {
+    background: #484848;
+}
+
+.tabHeader {
+    height: 30px;
+    position: sticky;
+    top:0;    
+
+    background: rgb(50, 50, 50);
+}
+
+h3 {
+    color: white;
+    font-size: 1em;
+}
+
+html 
+{
+    background: rgb(50, 50, 50);
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    --scrollbarBG: rgb(50, 50, 50);
+    --thumbBG: #90A4AE;
+}
+
+#sidebar 
+{
+    width: 30%;
+    height: 100%;
+    overflow:hidden;
+    position: fixed;
+    left: 0;
+}
+
+#inspector {
+    height:33%;
+    width:100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+
+}
+
+#inspector p {
+    margin: 6px;
+    overflow-x: hidden;
+}
+
+#outliner
+{
+    height: 33%;
+    width: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+
+}
+
+#controls {
+    height:33%;
+    width:100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+
+}
+
+#controls div.pass{
+    margin:6px;
+    padding:0.2em;
+    margin-bottom:2em;
+}
+
+#controls div section {
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    
+}
+
+#controls p {
+    color: white;
+    width: 40%;
+}
+
+#controls .name {
+    display: inline;
+    padding-left: 5%;
+}
+
+#controls .value {
+    text-align: center;
+}
+
+#controls input {
+    width:40%;
+    padding: 0.2em;
+}
+
+#bottombar 
+{
+    width: 70%;
+    height: 25%;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    opacity: 0;
+
+    position: fixed;
+    bottom: 0;
+    right: 0;
+}
+
+#console
+{
+    height: 100%;
+    width: 100%;
+    overflow-y:scroll;
+    background:rgba(40, 40, 40, 255);
+}
+
+/*
+#console 
+{
+    width: 70%;
+    height: 25%;
+    background:rgba(64, 64, 64, 255);
+    overflow-y: scroll;
+    overflow-x: hidden;
+    opacity: 0;
+
+    position: fixed;
+    bottom: 0;
+    right: 0;
+}
+*/
+
+#console p 
+{
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.5em;
+    padding-left: 0.5em;
+    margin-bottom: 0.55em;
+    color: white;
+}
+
+#resize
+{
+    width:100%;
+    height:8px;
+    background:rgba(32, 32, 32, 255);
+    z-index: 20;
+    cursor:grabbing;
+    position: sticky;
+    top:0;
+}
+
+canvas 
+{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    right: 0;
+    top: 0;
+    background: rgb(157, 157, 157);
+}
+
+p {
+    padding: 0.2em;
+    color: #FFFFFF;
+}
+
+label {
+    padding: 0.2em;
+    color: #FFFFFF;
+}
+
+input {
+    padding: 0.2em;
+}
+
+body
+{
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+#ui {
+    position: absolute;
+    z-index: 8;
+    color:rgba(0.0, 0.0, 0.0, 0.0);
+    top: 60px;  
+    right: 20px;
+    text-align: right;
+    pointer-events: none;
+}
+
+#ui p {
+    color: rgb(255, 255, 255);
+    pointer-events: none;
+}
+
+#ui p.substat {
+    color:#c4c4c4;
+    pointer-events: none;
+}
+
+#size {
+    position: absolute;
+    z-index: 1;
+    color:rgba(0.0, 0.0, 0.0, 0.0);
+    top: 20px;  
+    right: 20px;
+}
+
+#size p {
+    color: white;
+    text-align: right;
+}
+
+::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, .5);
+    box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+}
+
+.sceneEntity 
+{
+    cursor:pointer;
+    margin: 6px;
+    padding:0.2em;
+}
+
+.sceneComponent
+{
+    color:#AAAAAA
+}
+
+.sceneEntity:hover 
+{
+    cursor:pointer;
+    margin: 6px;
+    background: #848484;
+}
+
+.sceneEntitySelected
+{
+    cursor:pointer;
+    background: #CCCCCC;
+    margin:6px;
+    color: #323232;
+    padding:0.2em;
+}
+
+textarea {
+    background: #484848;
+    border-color: #484848;
+    color: #DDDDDD;
+    font-weight: 200;
+    resize: none;
+    padding: 0.5em;
+    margin: 0.5em;
+}
+
+textarea.vectorComponent{
+    display: inline;
+    height: 1em;
+    width: 6em;
+    margin-left: 10px;
+    overflow-y: hidden;
+}
+
+textarea.shaderCode {
+    display: inline;
+    width: 23em;
+    height: 12em;
+    margin-left: 10px;
+}
+
+#splash {
+    width: 100%;
+    height: 100%;
+    /*background: rgb(51, 51, 51);*/
+    background: rgb(157, 157, 157);
+    vertical-align:middle;
+    text-align: center;
+    position:absolute;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+    pointer-events: none;
+    opacity: 0;
+}
+
+#splash h1 {
+    color: #FFFFFF;
+    font-weight:100;
+}
+
+#loading {
+    color: rgb(157, 157, 157);
+}
