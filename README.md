@@ -1,6 +1,6 @@
 # Aftermath
 
- - [Browser Demo](https://ryandoescg.github.io/VXEngine/).
+ - [Browser Demo](https://ryandoescg.github.io/Aftermath/).
  - A small stealth demo built in a custom engine
 
 ![Alt text](images/screens/0.png?raw=true "Title")
