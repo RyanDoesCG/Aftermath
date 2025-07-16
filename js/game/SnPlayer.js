@@ -13,7 +13,7 @@ class SnPlayer extends Camera
             dampening:0.965
         }))
 
-        this.addComponent(new SphereCollisionComponent(1.3))
+     //   this.addComponent(new SphereCollisionComponent(0.2)) // TEMPORARY: VISUALIZE COLLISIONS
 
         this.moveSpeed = 0.00005
         this.sprintSpeed = 0.0001
