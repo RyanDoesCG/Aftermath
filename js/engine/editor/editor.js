@@ -45,7 +45,7 @@ class Editor
                   editor : true }),
             new SceneObject({
                     name : "ArrowZ",
-               transform : new Transform(Scale(1.0, 0.5, 1.0), Translation(0.0, 3.0, 0.0), Rotation(-0.5, 0.0, 0.0)),
+               transform : new Transform(Scale(1.0, 0.5, 1.0), Translation(0.0, 3.0, 0.0), Rotation(0.5, 0.0, 0.0)),
                   render : new RenderComponent(this.ArrowGeometry, this.BlueMaterial, false),
                   editor : true })]
 
@@ -226,7 +226,7 @@ class Editor
             this.engine.input.UPressed = false
         }
 
-        if (this.engine.input.CPressed)
+        if (this.engine.input.CPressed && this.editorShowing)
         {
             if (this.consoleShowing)
             {
@@ -312,55 +312,69 @@ class Editor
         }
 
         const mouseDiff = (this.engine.input.mouseX - this.LastMouseX) + (this.engine.input.mouseY - this.LastMouseY)
-        if (Math.abs(mouseDiff) > 2)
+        
+        // WORKS
+        const viewToWorld = this.engine.rendering.view.viewToWorld
+        const lastMouseWorldPos = multiplyvm(vec4(this.LastMouseX, this.LastMouseY, 0.0, 1.0), viewToWorld);
+        const thisMouseWorldPos = multiplyvm(vec4(this.engine.input.mouseX, this.engine.input.mouseY, 0.0, 1.0), viewToWorld)
+        const worldSpaceDiff = subv(lastMouseWorldPos, thisMouseWorldPos)
+        
+        const editorAdjustSpeed = 0.01
+
+        if (len(worldSpaceDiff) > 0.0 && this.selected)
         {
-            if (this.selected && this.XArrowHeld)
+            // TRANSLATE
+            if (this.XArrowHeld)
             {
-                if (this.engine.input.ShiftPressed)
-                {
-                    this.selected.transform.position[0] += Math.sign(mouseDiff) * 0.01
-                }
-                else
-                {                
-                    this.selected.transform.position[0] += Math.sign(mouseDiff) * 0.1
-                }
+                this.selected.transform.position[0] -= worldSpaceDiff[0] * editorAdjustSpeed
+            }
+
+            if (this.YArrowHeld)
+            {
+                this.selected.transform.position[1] -= worldSpaceDiff[1] * editorAdjustSpeed
+            }
+
+            if (this.ZArrowHeld)
+            {
+                this.selected.transform.position[2] -= worldSpaceDiff[2] * editorAdjustSpeed
+            }
+
+            if (this.XArrowHeld || this.YArrowHeld || this.ZArrowHeld)
+            {
                 this.selected.transform.dirty = true
                 this.selected.transform.rotationDirty = true
                 this.objectInspector.needsUpdate = true
             }
-    
-            if (this.selected && this.YArrowHeld)
+
+            // SCALE - ISSUE
+            if (this.XScalerHeld)
             {
-                if (this.engine.input.ShiftPressed)
-                {
-                    this.selected.transform.position[1] += Math.sign(mouseDiff) * 0.01
-                }
-                else
-                {                
-                    this.selected.transform.position[1] += Math.sign(mouseDiff) * 0.1
-                }
+                this.selected.transform.scale[0] -= worldSpaceDiff[0] * editorAdjustSpeed
+            }
+
+            if (this.YScalerHeld)
+            {
+                this.selected.transform.scale[1] -= worldSpaceDiff[1] * editorAdjustSpeed
+            }
+
+            if (this.ZScalerHeld)
+            {
+                this.selected.transform.scale[2] -= worldSpaceDiff[2] * editorAdjustSpeed
+            }
+
+            if (this.XScalerHeld || this.YScalerHeld || this.ZScalerHeld)
+            {
                 this.selected.transform.dirty = true
                 this.selected.transform.rotationDirty = true
                 this.objectInspector.needsUpdate = true
             }
-    
-            if (this.selected && this.ZArrowHeld)
-            {
-                if (this.engine.input.ShiftPressed)
-                {
-                    this.selected.transform.position[2] += Math.sign(mouseDiff) * 0.01
-                }
-                else
-                {                
-                    this.selected.transform.position[2] += Math.sign(mouseDiff) * 0.1
-                }
-                this.selected.transform.dirty = true
-                this.selected.transform.rotationDirty = true
-                this.objectInspector.needsUpdate = true
-            }
+
+            // ROTATE
+
         }
 
         // SCALES IN LOCAL SPACE, NOT WORLD
+        /*
         if (this.selected && this.XScalerHeld)
         {
             this.selected.transform.scale[0] += mouseDiff * 0.01
@@ -384,6 +398,7 @@ class Editor
             this.selected.transform.rotationDirty = true
             this.objectInspector.needsUpdate = true
         }
+        */
 
         if (this.selected && this.XRotatorHeld)
         {
