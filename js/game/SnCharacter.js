@@ -96,6 +96,8 @@ class SnCharacter extends SceneObject
 
         this.spottedPlayer = false;
         this.toPlayer = vec3(0.0, 0.0, 0.0);
+
+        this.detectionDistance = 10.0
         
     }
 
@@ -108,14 +110,17 @@ class SnCharacter extends SceneObject
                 this.light.view.forward[0], 
                 this.light.view.forward[1], 
                 this.light.view.forward[2])
-            
-            const lightPlayer = normalize(subv(
+
+            const lightPlayerFull = subv(
                 character.transform.getWorldPosition(),
-                this.light.transform.getWorldPosition()))
+                this.light.transform.getWorldPosition())
+            
+            const lightPlayer = normalize(lightPlayerFull)
             
             const angle = dot(lightForward, lightPlayer)
+            const dist = Math.sqrt(dot(lightPlayerFull, lightPlayerFull))
 
-            if (angle > this.light.angle)
+            if (angle > this.light.angle && dist < this.detectionDistance)
             {
                 this.light.color = vec3(1.0, 0.0, 0.0)
                 this.spottedPlayer = true;
