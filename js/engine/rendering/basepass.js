@@ -114,8 +114,17 @@ class DeferredBasePass extends BasePass
                 this.gl.uniform1iv       (material.BasePassUniforms.get("ID").location, id)
                 this.gl.uniformMatrix4fv (material.BasePassUniforms.get("transform").location, false, transform)
                 this.gl.uniform3fv       (material.BasePassUniforms.get("scale").location, scale)
-                    
-                geometry.draw(components.length)
+
+                if (components[0].twosided)
+                {
+                    this.gl.disable(this.gl.CULL_FACE)
+                    geometry.draw(components.length)
+                    this.gl.enable(this.gl.CULL_FACE)
+                }
+                else
+                {
+                    geometry.draw(components.length)
+                }
             }
         }
 

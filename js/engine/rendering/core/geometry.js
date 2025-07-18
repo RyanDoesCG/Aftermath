@@ -1477,25 +1477,29 @@ let GrassMesh = (function () {
     let normals = []
     let uvs = []
 
-    for (var i = 0; i < 20000; ++i)
+    //    *
+    //   / \
+    //  /   \
+    // * --- *
+    for (var i = 0; i < 3481; ++i) // 59^2
     {
-        let x = (-1.0 + Math.random() * 2.0) * 1000.0
-        //let y = (-1.0 + Math.random() * 2.0) * 0.2
-    
-        let z = (-1.0 + Math.random() * 2.0) * 1000.0
+        // We want to do this in the shader really
+        //let scale = 200.0
+        //let x = (-1.0 + Math.random() * 2.0) * scale
+        //let z = (-1.0 + Math.random() * 2.0) * scale
+        //let y = noise(x * 0.01, z * 0.01, 0.0) * 2.0
 
-        let y = noise(x * 0.001, z * 0.001, 0.0)
-        
-
+        // NOTE: Triangle IDs are packed into the normals
+        // and replaced in the material later on
         let blade = new Mesh(
             new Float32Array([
-                x + -2.0, 0.0, z,  
-                x +  2.0, 0.0, z, 
-                x +  0.0, 3.3 + y, z ]),
+                -0.05, 0.0, 0.0,  
+                 0.05, 0.0, 0.0, 
+                 0.0, 0.5, 0.0 ]),
             new Float32Array([
-                0.0, 0.0, 1.0, 
-                0.0, 0.0, 1.0, 
-                0.0, 0.0, 1.0 ]),
+                0.0, i, 1.0, 
+                0.0, i, 1.0, 
+                0.0, i, 1.0 ]),
             new Float32Array([
                 0.0, 0.0, 
                 1.0, 0.0, 
@@ -1507,6 +1511,11 @@ let GrassMesh = (function () {
 
     log ("Grass Mesh generated with " + positions.length / 3 + " triangles")
 
+    //     *
+    //    / \
+    //   *---*
+    //  / \ / \
+    // * --*-- *
     return tesselate(new Mesh(
         new Float32Array(positions),
         new Float32Array(normals),

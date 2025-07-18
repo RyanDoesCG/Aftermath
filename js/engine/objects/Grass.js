@@ -76,6 +76,9 @@ class Grass extends SceneObject
     constructor (engine, transform)
     {
         const geometry = engine.rendering.requestGeometry("Grass")
+
+        // Where to pass trails texture over?
+        // Get UVs from world position
         const material = engine.rendering.requestMaterial(BLEND_MODE_OPAQUE, 1.0, 1.0, 1.0, 0.1, 0.0, `
             float random (vec2 st) {
                 return fract(sin(dot(st.xy, vec2(12.9898,78.233)))*43758.5453123);
@@ -88,23 +91,78 @@ class Grass extends SceneObject
             }`,
             `vec3  getMaterialNormal()
             {
-                return frag_normal;
+                return vec3(0.0, 0.0, 1.0);
             }`,
             `
+
+            float random (vec2 st) {
+                return -1.0 + fract(sin(dot(st.xy, vec2(12.9898,78.233)))*43758.5453123) * 2.0;
+            }
+
+            float noise (vec2 uv)
+            {
+                float a = random(floor(uv));
+                float b = random(floor(uv) + vec2(1.0, 0.0));
+                float c = random(floor(uv) + vec2(0.0, 1.0));
+                float d = random(floor(uv) + vec2(1.0, 1.0));
+                vec2 t = smoothstep(vec2(0.0), vec2(1.0), fract(uv));
+                return mix(a, b, t.x) +
+                    (c - a) * t.y * (1.0 - t.x) +
+                    (d - b) * t.x * t.y;
+            }
+                    
+            uniform sampler2D trails;
+
+            uniform vec2 grassOffset;
+            uniform vec2 grassScale;
+
             vec3 getMaterialLPO()
             {
                 float t = Time * 0.1;
-                vec4  p = (transform[gl_InstanceID] * vec4(vertex_position.xyz, 1.0));
-                float d = 1.0;
-                float f = (1.0 - clamp(d, 0.6, 1.0)) * 2.0;
-                return vec3(
-                        sin(t + float(gl_InstanceID) + p.x + p.z) * (vertex_uv.y), 
-                        -f, 
-                        cos(t + float(gl_InstanceID) + p.x + p.z) * (vertex_uv.y)) 
-                    * 
-                        vertex_position.y
-                    * 
-                        1.0;
+                float id = float(gl_InstanceID * 3481) + vertex_normal.y;
+                float idX = mod(id, 59.0);
+                float idY = floor(id / 59.0) * 59.0;
+
+                // COMPUTE GRID ID OF GRASS BLADE
+                // USE THAT TO LOOK IN TO NOISE TEX
+
+                // World Positioning
+                vec3 world = vec3(
+                    noise(vec2(idX, idY) / 59.0),
+                    0.0, 
+                    noise(vec2(idY, idX) / 59.0));
+
+                world *= 32.0;
+
+                world.y = (noise(vec2(world.x, world.z)) + 1.0) * 0.5 * vertex_uv.y * 0.1;
+                    
+                // Tip Sway
+                vec3 sway_mass = vec3(
+                    sin(t + float(gl_InstanceID) + world.x + world.x) * vertex_uv.y,
+                    0.0,
+                    cos(t + float(gl_InstanceID) + world.x + world.z) * vertex_uv.y);
+                sway_mass *= 0.2;
+
+                vec3 sway_local = vec3(
+                    sin(t + float(id) + world.x + world.x) * vertex_uv.y,
+                    0.0,
+                    cos(t + float(id) + world.x + world.z) * vertex_uv.y);
+                sway_local *= 0.1;
+
+                vec3 sway = (sway_mass + sway_local) * vertex_position.y;
+
+                // Base Rotation
+                mat2 m = mat2(
+                     cos(id), sin(id),   // first column
+                    -sin(id), cos(id));  // second column
+
+                vec2 b = m * vec2(
+                    vertex_position.x,
+                    vertex_position.z);
+
+                vec3 base = vec3(b.x, 0.0, b.y);
+                
+                return world + base + sway;
             }`)
 
         super ({
@@ -115,13 +173,11 @@ class Grass extends SceneObject
         for (var i = 0; i < 32; ++i)
         {
             const component = new RenderComponent(geometry, material, false);
-            component.transform.position[0] = (-1.0 + Math.random() * 2.0) * 2.0
-            component.transform.position[2] = (-1.0 + Math.random() * 2.0) * 2.0
-            component.transform.position = normalize(component.transform.position)
-            component.transform.position = multiplys(component.transform.position, 1.0 + Math.random() * 2.0)
-            component.transform.rotation[1] = (-1.0 + Math.random() * 2.0) * Math.PI
+            component.twosided = true;
             this.addComponent(component)
         }
+
+
 
         this.trails = new CharacterTrailRenderer(engine.rendering.gl, 1024, 1024)
     }

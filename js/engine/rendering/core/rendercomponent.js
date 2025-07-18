@@ -9,6 +9,7 @@ class RenderComponent extends Component
 
         this.shadows = shadows
         this.visible = true
+        this.twosided = false
     }
 
     toString()
