@@ -78,7 +78,6 @@ class Grass extends SceneObject
         const geometry = engine.rendering.requestGeometry("Grass")
 
         // Where to pass trails texture over?
-        // Get UVs from world position
         const material = engine.rendering.requestMaterial(BLEND_MODE_OPAQUE, 1.0, 1.0, 1.0, 0.1, 0.0, `
             float random (vec2 st) {
                 return fract(sin(dot(st.xy, vec2(12.9898,78.233)))*43758.5453123);
@@ -111,10 +110,9 @@ class Grass extends SceneObject
                     (d - b) * t.x * t.y;
             }
                     
-            uniform sampler2D trails;
-
-            uniform vec2 grassOffset;
-            uniform vec2 grassScale;
+            uniform sampler2D trails; // TODO
+            uniform float size; // TODO
+            #define SIZE 32.0
 
             vec3 getMaterialLPO()
             {
@@ -128,7 +126,7 @@ class Grass extends SceneObject
                     noise(vec2(idX, idY) / 59.0),
                     0.0, 
                     noise(vec2(idY, idX) / 59.0));
-                world *= 32.0;
+                world *= SIZE;
                 world.y = (noise(vec2(world.x, world.z)) + 1.0) * 0.5 * vertex_uv.y * 0.1;
                     
                 // Tip Sway
@@ -163,14 +161,12 @@ class Grass extends SceneObject
             transform : transform
         })
 
-        for (var i = 0; i < 32; ++i)
+        for (var i = 0; i < 64; ++i)
         {
             const component = new RenderComponent(geometry, material, false);
             component.twosided = true;
             this.addComponent(component)
         }
-
-
 
         this.trails = new CharacterTrailRenderer(engine.rendering.gl, 1024, 1024)
     }
