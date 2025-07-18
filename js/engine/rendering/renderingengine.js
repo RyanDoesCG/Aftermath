@@ -64,7 +64,7 @@ class RenderingEngine
         this.ColourCompositeRenderPass
         this.IDCompositeRenderPass
         this.TransparentComposireRenderPass
-        this.VisualizeTexture
+        this.VisualizeTexturePass
         this.passes
         this.NumHistorySamples
         this.LightingBuffer
@@ -82,6 +82,8 @@ class RenderingEngine
         {
             this.STBNBlueNoiseTextures.push(loadTexture(this.gl, 'images/noise/STBN/stbn_scalar_2Dx1Dx1D_128x128x64x1_' + i + '.png'))
         }
+
+        this.VisualizeTexture = this.SpotLightVolumetricRenderPass.output
 
         // View
         this.Near = 0.1
@@ -162,7 +164,7 @@ class RenderingEngine
         this.DepthOfFieldRenderPass         = new DepthOfFieldPass          (this.gl, this.width, this.height)
         this.PostProcessRenderPass          = new PostProcessPass           (this.gl, this.width, this.height)
         this.TonemappingRenderPass          = new TonemappingPass           (this.gl, this.width, this.height)
-        this.VisualizeTexture               = new VisualizationPass         (this.gl, this.width, this.height)
+        this.VisualizeTexturePass           = new VisualizationPass         (this.gl, this.width, this.height)
         this.EditorRenderPass               = new EditorPass                (this.gl, this.width, this.height)
         this.EditorAARenderPass             = new TAAPass                   (this.gl, this.width, this.height)
         this.OutlineRenderPass              = new OutlinePass               (this.gl, this.width, this.height)
@@ -180,6 +182,8 @@ class RenderingEngine
             this.DepthOfFieldRenderPass,
             this.TonemappingRenderPass
         ]
+
+        this.VisualizeTexture = this.SpotLightVolumetricRenderPass.output
 
         this.LightingBuffer = createColourTexture(
             this.gl,
@@ -665,7 +669,7 @@ class RenderingEngine
 
         if (this.engine.input.VPressed)
         {
-            this.VisualizeTexture.Render(this, this.ScreenPrimitive, this.SpotLightVolumetricRenderPass.output)
+            this.VisualizeTexturePass.Render(this, this.ScreenPrimitive, this.VisualizeTexture)
         }
 
         this.frametime.add(Date.now() - start)

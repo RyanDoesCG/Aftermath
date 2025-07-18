@@ -23,10 +23,12 @@
                 {
                     let start = Date.now()
                     this.input     . startFrame()
+
                     this.editor    . update()
-                    this.rendering . update()
                     this.scene     . update()
                     this.physics   . update()
+                    this.rendering . update()
+
                     this.input     . endFrame()
                     this.frametime.add(Date.now() - start)
                 }

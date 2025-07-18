@@ -174,7 +174,7 @@ class SnCharacter extends SceneObject
                 // WANDER
                 const view = new View(this.transform.position, this.transform.rotation)
                 physics.linearForce(multiplys(view.forward, this.wanderSpeed));
-                physics.angularForce(vec3(0.0, Math.cos((engine.input.time + this.id) * 0.001) * 0.00005, 0.0))
+                physics.angularForce(vec3(0.0, Math.cos((engine.input.time + this.id * 1000) * 0.001) * 0.00005, 0.0))
             }
         }
     }
