@@ -82,7 +82,7 @@ class EditorCamera extends Camera
 
                 projectile.ticks = false
 
-                const f = engine.rendering.view.forward
+                const f = normalize(addv(engine.rendering.view.forward, vec4((-1.0 + Math.random() * 2.0) * 0.2, (-1.0 + Math.random() * 2.0) * 0.2, 0.0, 0.0)))
                 projectile.getPhysicsComponent().linearForce(multiplys(vec3(f[0], f[1], f[2]), 20.0))
 
                 engine.scene.add(projectile)
@@ -94,7 +94,7 @@ class EditorCamera extends Camera
 
             for (var i = 0; i < this.balls.length; ++i)
             {
-                if (/*(Date.now() - this.balls[i][0]) > 20000 ||*/ (this.balls[i][1].transform.getWorldPosition()[1] < -10))
+                if ((Date.now() - this.balls[i][0]) > 10000 || (this.balls[i][1].transform.getWorldPosition()[1] < -10))
                 {
                     log ("cull ball")
                     engine.scene.remove(this.balls[i][1].id)

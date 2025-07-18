@@ -135,11 +135,8 @@ class Grass extends SceneObject
 
                // float minY = -0.4;
                // float maxY = world.y;
-
                // world.y = mix(minY, maxY, clamp(texture(trails, uv).r, 0.0, 1.0));
-
                // world.y *= vertex_position.y;
-            
 
                 // Tip Sway
                 vec3 sway_mass = vec3(
