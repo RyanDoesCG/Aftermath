@@ -118,7 +118,7 @@ class SceneObject
     {
         return this.physicsComponent
         /*
-        for (var i = 0; i < this.components.length; ++i)
+        var i = 0; i < this.components.length; ++i)
             if (this.components[i] instanceof PhysicsComponent)
                 return this.components[i]
         return null

@@ -45,30 +45,47 @@ class CharacterTrailRenderer extends RenderPass
             void main ()
             {
                 float t = length(-1.0 + frag_uvs * 2.0);
-                out_colour = vec4(t, t, t, 1.0);
+                out_colour = vec4(0.0, 0.0, 0.0, 1.0 - t);
             }`
 
         super (context, width, height, VertexSource, FragmentSource)
 
         this.output = createColourTexture(this.gl, this.width, this.height, this.gl.RGBA, this.gl.UNSIGNED_BYTE)
         this.framebuffer = createFramebuffer(this.gl, [ this.gl.COLOR_ATTACHMENT0 ], [ this.output ])
-    }
-
-    Render(renderer)
-    {
-        renderer.VisualizeTexture = this.output
 
         this.gl.viewport(0, 0, this.width, this.height);
         this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.framebuffer);
 
-        this.gl.clearColor(1.0, 1.0, 1.0, 1.0);
+        this.gl.clearColor(1.0, 1.0, 1.0, 0.0);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT);
+    }
+
+    Render(renderer, characters, grassOffset, grassSize)
+    {
+        renderer.VisualizeTexture = this.output
+
+        this.gl.enable(this.gl.BLEND);
+        this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
+        this.gl.blendEquation(this.gl.FUNC_ADD);
+
+        this.gl.viewport(0, 0, this.width, this.height);
+        this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.framebuffer);
+
+        this.gl.clearColor(1.0, 1.0, 1.0, 0.0);
+      //  this.gl.clear(this.gl.COLOR_BUFFER_BIT);
         this.gl.useProgram(this.ShaderProgram);
 
-        this.gl.uniform2f(this.gl.getUniformLocation(this.ShaderProgram, "offset"), 0.0, 0.0)
-        this.gl.uniform2f(this.gl.getUniformLocation(this.ShaderProgram, "scale"), 1.0, 1.0)
+        for (var i = 0; i < characters.length; ++i)
+        {
+            this.gl.uniform2f(this.gl.getUniformLocation(this.ShaderProgram, "offset"), 
+                (characters[i].transform.position[0] - grassOffset[0]) / grassSize[0], 
+                (characters[i].transform.position[2] - grassOffset[1]) / grassSize[1])
+            this.gl.uniform2f(this.gl.getUniformLocation(this.ShaderProgram, "scale"), 0.02, 0.02)
 
-        renderer.GeometryPool.get("Quad").draw()
+            renderer.GeometryPool.get("Quad").draw()
+        }
+
+        this.gl.disable(this.gl.BLEND)
     }
 }
 
@@ -133,10 +150,10 @@ class Grass extends SceneObject
 
                 vec2 uv = vec2(((world.x / SIZE) + 1.0) * 0.5, ((world.z / SIZE) + 1.0) * 0.5);
 
-               // float minY = -0.4;
-               // float maxY = world.y;
-               // world.y = mix(minY, maxY, clamp(texture(trails, uv).r, 0.0, 1.0));
-               // world.y *= vertex_position.y;
+                float minY = -0.45;
+                float maxY = world.y;
+                world.y = mix(minY, maxY, clamp(texture(trails, uv).r, 0.0, 1.0));
+                world.y *= vertex_uv.y;
 
                 // Tip Sway
                 vec3 sway_mass = vec3(
@@ -186,8 +203,16 @@ class Grass extends SceneObject
 
         // TO DO
         // Gather dynamic objects to render into trails texture
+        const characters = []
+        engine.scene.traverse((object) => 
+        {
+            if (object.name == "Character" || object.name == "Camera")
+            {
+                characters.push(object);
+            }
+        })
 
-        this.trails.Render(engine.rendering);
+        this.trails.Render(engine.rendering, characters, vec2(0.0, 0.0), vec2(32.0, 32.0));
         TexturePool.set("trails", this.trails.output);
     }
 }
