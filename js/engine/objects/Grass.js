@@ -44,7 +44,8 @@ class CharacterTrailRenderer extends RenderPass
 
             void main ()
             {
-                out_colour = vec4(1.0, 1.0, 1.0, 1.0);
+                float t = length(-1.0 + frag_uvs * 2.0);
+                out_colour = vec4(t, t, t, 1.0);
             }`
 
         super (context, width, height, VertexSource, FragmentSource)
@@ -60,12 +61,12 @@ class CharacterTrailRenderer extends RenderPass
         this.gl.viewport(0, 0, this.width, this.height);
         this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.framebuffer);
 
-        this.gl.clearColor(0.0, 0.0, 0.0, 0);
+        this.gl.clearColor(1.0, 1.0, 1.0, 1.0);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT);
         this.gl.useProgram(this.ShaderProgram);
 
         this.gl.uniform2f(this.gl.getUniformLocation(this.ShaderProgram, "offset"), 0.0, 0.0)
-        this.gl.uniform2f(this.gl.getUniformLocation(this.ShaderProgram, "scale"), 0.5, 0.5)
+        this.gl.uniform2f(this.gl.getUniformLocation(this.ShaderProgram, "scale"), 1.0, 1.0)
 
         renderer.GeometryPool.get("Quad").draw()
     }
@@ -110,7 +111,7 @@ class Grass extends SceneObject
                     (d - b) * t.x * t.y;
             }
                     
-            uniform sampler2D trails; // TODO
+            uniform sampler2D trails;
             uniform float size; // TODO
             #define SIZE 32.0
 
@@ -127,8 +128,19 @@ class Grass extends SceneObject
                     0.0, 
                     noise(vec2(idY, idX) / 59.0));
                 world *= SIZE;
+
                 world.y = (noise(vec2(world.x, world.z)) + 1.0) * 0.5 * vertex_uv.y * 0.1;
-                    
+
+                vec2 uv = vec2(((world.x / SIZE) + 1.0) * 0.5, ((world.z / SIZE) + 1.0) * 0.5);
+
+               // float minY = -0.4;
+               // float maxY = world.y;
+
+               // world.y = mix(minY, maxY, clamp(texture(trails, uv).r, 0.0, 1.0));
+
+               // world.y *= vertex_position.y;
+            
+
                 // Tip Sway
                 vec3 sway_mass = vec3(
                     sin(t + world.x + world.x) * vertex_uv.y,
@@ -161,6 +173,7 @@ class Grass extends SceneObject
             transform : transform
         })
 
+        this.renderComponents = []
         for (var i = 0; i < 64; ++i)
         {
             const component = new RenderComponent(geometry, material, false);
@@ -173,6 +186,11 @@ class Grass extends SceneObject
 
     update(engine)
     {
+
+        // TO DO
+        // Gather dynamic objects to render into trails texture
+
         this.trails.Render(engine.rendering);
+        TexturePool.set("trails", this.trails.output);
     }
 }

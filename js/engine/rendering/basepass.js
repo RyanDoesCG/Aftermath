@@ -98,6 +98,10 @@ class DeferredBasePass extends BasePass
                             this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
                             this.gl.uniform1i(uniform.location, u);
                         }
+                        else
+                        {
+                            log("MISSED TEXTURE POOL : " + uniform.name);
+                        }
                         ++u
                     }
                 }
