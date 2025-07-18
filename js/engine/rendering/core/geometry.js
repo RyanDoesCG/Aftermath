@@ -1483,14 +1483,6 @@ let GrassMesh = (function () {
     // * --- *
     for (var i = 0; i < 3481; ++i) // 59^2
     {
-        // We want to do this in the shader really
-        //let scale = 200.0
-        //let x = (-1.0 + Math.random() * 2.0) * scale
-        //let z = (-1.0 + Math.random() * 2.0) * scale
-        //let y = noise(x * 0.01, z * 0.01, 0.0) * 2.0
-
-        // NOTE: Triangle IDs are packed into the normals
-        // and replaced in the material later on
         let blade = new Mesh(
             new Float32Array([
                 -0.05, 0.0, 0.0,  

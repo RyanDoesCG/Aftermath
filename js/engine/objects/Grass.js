@@ -123,31 +123,25 @@ class Grass extends SceneObject
                 float idX = mod(id, 59.0);
                 float idY = floor(id / 59.0) * 59.0;
 
-                // COMPUTE GRID ID OF GRASS BLADE
-                // USE THAT TO LOOK IN TO NOISE TEX
-
                 // World Positioning
                 vec3 world = vec3(
                     noise(vec2(idX, idY) / 59.0),
                     0.0, 
                     noise(vec2(idY, idX) / 59.0));
-
                 world *= 32.0;
-
                 world.y = (noise(vec2(world.x, world.z)) + 1.0) * 0.5 * vertex_uv.y * 0.1;
                     
                 // Tip Sway
                 vec3 sway_mass = vec3(
-                    sin(t + float(gl_InstanceID) + world.x + world.x) * vertex_uv.y,
+                    sin(t + world.x + world.x) * vertex_uv.y,
                     0.0,
-                    cos(t + float(gl_InstanceID) + world.x + world.z) * vertex_uv.y);
-                sway_mass *= 0.2;
-
+                    cos(t + world.x + world.z) * vertex_uv.y);
+                sway_mass *= 0.1;
                 vec3 sway_local = vec3(
                     sin(t + float(id) + world.x + world.x) * vertex_uv.y,
                     0.0,
                     cos(t + float(id) + world.x + world.z) * vertex_uv.y);
-                sway_local *= 0.1;
+                sway_local *= 0.2;
 
                 vec3 sway = (sway_mass + sway_local) * vertex_position.y;
 
@@ -155,13 +149,12 @@ class Grass extends SceneObject
                 mat2 m = mat2(
                      cos(id), sin(id),   // first column
                     -sin(id), cos(id));  // second column
-
                 vec2 b = m * vec2(
                     vertex_position.x,
                     vertex_position.z);
-
                 vec3 base = vec3(b.x, 0.0, b.y);
                 
+                // Integrate
                 return world + base + sway;
             }`)
 
