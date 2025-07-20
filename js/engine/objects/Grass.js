@@ -12,7 +12,6 @@
 //   NOTES
 //
 //   Heightmap render needs to happen _before_ base pass
-
 class CharacterTrailRenderer extends RenderPass
 {
     constructor(context, width, height)
@@ -21,16 +20,13 @@ class CharacterTrailRenderer extends RenderPass
            `#version 300 es
             precision lowp float;
 
-            uniform vec2 offset;
-            uniform vec2 scale;
-
             in vec3 vertex_position;
             in vec3 vertex_normal;
             in vec2 vertex_uvs;
             out vec2 frag_uvs;
             void main() 
             {
-                gl_Position = vec4(vertex_position.xy * scale + offset, 0.0, 1.0);
+                gl_Position = vec4(vertex_position.xy, 0.0, 1.0);
                 frag_uvs = vertex_uvs;
             }`
 
@@ -38,14 +34,25 @@ class CharacterTrailRenderer extends RenderPass
            `#version 300 es
             precision lowp float;
 
+            #define MAX_LOCATIONS 4
+            uniform vec2 locations[MAX_LOCATIONS];
+
             in vec2 frag_uvs;
 
             out vec4 out_colour;
 
             void main ()
             {
-                float t = length(-1.0 + frag_uvs * 2.0);
-                out_colour = vec4(0.0, 0.0, 0.0, 1.0 - t);
+                out_colour = vec4(1.0, 1.0, 1.0, 0.005);  
+                for (int i = 0; i < MAX_LOCATIONS; ++i)
+                {
+                    vec2 between = frag_uvs - locations[i];
+                    float distsqr = length(between);
+                    if (distsqr < 0.01)
+                    {
+                        out_colour = vec4(0.0, 0.0, 0.0, 1.0);       
+                    }
+                }
             }`
 
         super (context, width, height, VertexSource, FragmentSource)
@@ -66,24 +73,39 @@ class CharacterTrailRenderer extends RenderPass
 
         this.gl.enable(this.gl.BLEND);
         this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
-        this.gl.blendEquation(this.gl.FUNC_ADD);
+        this.gl.blendEquation(this.gl.FUNC_MULTIPLY);
 
         this.gl.viewport(0, 0, this.width, this.height);
         this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.framebuffer);
-
-        this.gl.clearColor(1.0, 1.0, 1.0, 0.0);
-      //  this.gl.clear(this.gl.COLOR_BUFFER_BIT);
+        
         this.gl.useProgram(this.ShaderProgram);
 
+        let locations = []
         for (var i = 0; i < characters.length; ++i)
         {
+            let corner = vec2(grassOffset[0] + (-grassSize[0] * 0.5), grassOffset[1] + (-grassSize[1] * 0.5))
+
+            let relative = subv(vec2(characters[i].transform.position[0], characters[i].transform.position[2]), grassOffset);
+
+            let to = subv(relative, corner)
+
+            let scaled = dividev(to, grassSize)
+           // let scaled = dividev(relative, grassSize/2.0);
+            //let mapped = multiplys(addv(vec2(-0.5, 0.5), scaled), 2.0)
+            
+            locations.push(scaled[0])
+            locations.push(scaled[1])
+            /*
             this.gl.uniform2f(this.gl.getUniformLocation(this.ShaderProgram, "offset"), 
                 (characters[i].transform.position[0] - grassOffset[0]) / grassSize[0], 
                 (characters[i].transform.position[2] - grassOffset[1]) / grassSize[1])
             this.gl.uniform2f(this.gl.getUniformLocation(this.ShaderProgram, "scale"), 0.02, 0.02)
-
-            renderer.GeometryPool.get("Quad").draw()
+            */
         }
+
+        this.gl.uniform2fv(this.gl.getUniformLocation(this.ShaderProgram, "locations"), locations)
+
+        renderer.GeometryPool.get("Quad").draw()
 
         this.gl.disable(this.gl.BLEND)
     }
@@ -212,7 +234,7 @@ class Grass extends SceneObject
             }
         })
 
-        this.trails.Render(engine.rendering, characters, vec2(0.0, 0.0), vec2(32.0, 32.0));
+        this.trails.Render(engine.rendering, characters, vec2(0.0, 0.0), vec2(64.0, 64.0));
         TexturePool.set("trails", this.trails.output);
     }
 }
