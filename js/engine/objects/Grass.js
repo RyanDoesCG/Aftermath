@@ -69,11 +69,11 @@ class CharacterTrailRenderer extends RenderPass
 
     Render(renderer, characters, grassOffset, grassSize)
     {
-        renderer.VisualizeTexture = this.output
+//        renderer.VisualizeTexture = this.output
 
         this.gl.enable(this.gl.BLEND);
         this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
-        this.gl.blendEquation(this.gl.FUNC_MULTIPLY);
+        this.gl.blendEquation(this.gl.FUNC_ADD);
 
         this.gl.viewport(0, 0, this.width, this.height);
         this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.framebuffer);
@@ -210,7 +210,7 @@ class Grass extends SceneObject
         })
 
         this.renderComponents = []
-        for (var i = 0; i < 64; ++i)
+        for (var i = 0; i < 128; ++i)
         {
             const component = new RenderComponent(geometry, material, false);
             component.twosided = true;
